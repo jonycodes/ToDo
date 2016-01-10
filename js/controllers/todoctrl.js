@@ -13,7 +13,7 @@
                     login: false,
                     app: false,
                     register: false,
-                    message = "Please Enter User and Password"
+                    message : "Please Enter User and Password"
                 };
 
                 //stores user credentials
@@ -26,9 +26,8 @@
                 $scope.next = function() {
                     $scope.show.greeting = !$scope.show.greeting;
                     $scope.show.login = !$scope.show.login;
-                    console.log("Show Login");
                 };
-                
+
                 //Goes back to main menu
                 $scope.back = function() {
                     $scope.show.app = false;
@@ -56,7 +55,7 @@
                         window.alert("Username does not exist");
                         register = window.confirm("Want to register?");
                         if (register) {
-                            $scope.message = "Register";
+                            $scope.show.message = "Register";
                             $scope.show.register = true;
                         }
                     }

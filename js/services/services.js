@@ -14,7 +14,6 @@
 	            },
 	            checkUser: function(user, password) {
 	                if (storage.findUser(user, password)) {
-	                    console.log(user);
 	                    return true;
 	                }
 	                return false;
@@ -46,7 +45,6 @@
 	            getTodos: function(admin, user) {
 	                var index = 0;
 	                var temparray = [];
-	                console.log(user);
 	                if (admin) {
 	                    while (index < todos.length) {
 	                        temparray.push(todos[index][1]);
