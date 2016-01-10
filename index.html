@@ -23,16 +23,16 @@
             <input type="password" ng-model="user.password" placeholder="Enter Password" />
             </br>
             </br>
-            <input ng-hide="show.register" type="submit" class="" ng-click="validate(user.name, user.password)" value="Submit" />
-            <input ng-show="show.register" type="submit" class="" ng-click="register(user.name, user.password)" value="Register" />
+            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validate(user.name, user.password)" value="Login" />
+            <input ng-show="show.register" type="submit" class="buttons" ng-click="register(user.name, user.password)" value="Register" />
         </form>
         <div ng-show="show.app" class="app col-sm-4">
-        <h1> Hello &nbsp;{{user.name}} </h1>	
+        <h1> Hello {{user.name}} </h1>	
             <form class="col-sm-12">
                 <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event, user.name, newtodo)" autofocus>
                 <br/>
             </form>
-            <input type="submit" ng-click="back()" value="Main Menu">
+            <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
         </div>
         <div ng-show="show.app" class="app-todos col-sm-4" ng-repeat="todo in todos track by $index">
             <p>{{todo}}</p> <button type="button" class="btn btn-default" ng-click="removeTodo(user.name, todo)">

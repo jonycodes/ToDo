@@ -13,7 +13,7 @@
                     login: false,
                     app: false,
                     register: false,
-                    message : "Please Enter User and Password"
+                    message : "Enter User and Password"
                 };
 
                 //stores user credentials
@@ -33,7 +33,7 @@
                     $scope.show.app = false;
                     $scope.show.greeting = true;
                     $scope.show.register = false;
-                    $scope.show.message = "Please Enter User and Password";
+                    $scope.show.message = "Enter User and Password";
                 }
 
                 //validates the user through the validate service
