@@ -13,7 +13,7 @@
                     login: false,
                     app: false,
                     register: false,
-                    message = "Please Enter User and Password"
+                    message : "Please Enter User and Password"
                 };
 
                 //stores user credentials
