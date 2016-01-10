@@ -1,0 +1,157 @@
+*{
+//border:1px solid black !important;
+}
+.app{
+	border: 1px solid rgba(0,0,0,0.2);
+	border-radius: 10px;
+	float: none !important;
+	margin:2%;
+	padding:5px 1px;
+	top:50px;
+}
+
+.app-todos {
+	font-size: 18pt;
+	border: 1px solid rgba(0,0,0,0.2);
+	border-radius: 10px;
+	float: none !important;
+	margin: 2px;
+	padding:5px 20px;
+	position: relative;
+	top:15px;
+}
+.app-todos p{
+	float: left;
+	margin:0.4%;
+}
+
+.app-todos button{
+	float: right;
+	margin:1%;
+}
+
+.app #todo{
+	font-size: 18pt;
+	margin:0px;
+	width:100%;
+	position: relative;
+}
+.profile{
+ 	border: 1px solid black;
+ 	margin:  2% 0%;
+}
+.align-center *{
+	display: table !important;
+	margin-left:auto !important;
+	margin-right:auto !important;
+}
+.align-left{
+	display:table;
+	margin-right:auto !important;
+}
+.align-right{
+	display:table;
+   margin-left:auto !important;
+}
+
+.text-right{
+    text-align:right;
+}
+.text-center{
+    text-align:center;
+}
+.text-left{
+ text-align:left;
+}
+.right{
+    float:right;
+}
+.left{
+    float:left;	
+}
+.align-middle{
+	display:table-cell;
+	vertical-align: middle;
+}
+.user{
+	padding:2.5% 0 0 0	;
+}
+
+.side-padding{
+	padding-right:13%;
+	padding-left:13%;
+}
+
+.max-large{
+    max-width:1200px;
+}
+.max-medium{
+    max-width:900px;
+}
+.max-small{
+	max-width:400px;
+}
+.min-large{
+    min-width:8000px}
+.min-medium{
+    min-width:600px;
+}
+.min-small{
+    min-width:470px;
+}
+
+.min-x-small{
+	min-width:350px;
+}
+
+.min-h-small{
+	min-height:200px;
+}
+
+.min-h-medium{
+	min-height: 250px;
+}
+
+/* Index Page Style */
+
+.welcome-msg{
+	display: table;
+	vertical-align: middle;
+}
+.register-form input{
+ 	display: inline-block;
+}
+.post-box{
+	border:1px solid black;
+	padding:3%;
+	margin:10px 100px;
+}
+
+.comment-box{
+	padding:1%;
+	margin:10px 50px;	
+}
+
+.comment-box .post{
+	padding:2% 0;
+	border-top: 1px solid black;
+	margin:2% 0;
+}
+
+.post-box .post{
+	padding:2% 0;
+	border-top: 1px solid black;
+	margin:2% 0;
+}
+.post-box img{
+    width: 400px;
+    height: 300px;    
+}
+
+.nav-tabs a{
+	text-decoration: none !important;
+
+}
+.nav-tabs {
+	list-style: none;
+}
