@@ -1,4 +1,4 @@
-	angular.module('todoapp')
+	angular.module('todoapp')//valitades the user
 	    .factory('validate', function(storage) {
 	        localStorage.adminUser = "admin";
 	        localStorage.adminPassword = "todo";
@@ -21,7 +21,7 @@
 	        }
 
 	        return validate;
-	    })
+	    })//stores the todos and user's credentials
 	    .factory('storage', function() {
 	        var users = [];
 	        var todos = [];
@@ -53,20 +53,23 @@
 	                } else {
 	                    while (index < todos.length) {
 	                        if (todos[index][0] === user) {
-
 	                            temparray.push(todos[index][1]);
-	                            index += 1;
-	                        } else {
-	                            index += 1;
 	                        }
-
+	                        index++;
 	                    }
 	                }
 	                return temparray;
 	            },
 
 	            removeTodo: function(user, todo) {
-	                todos.splice(todos.indexOf([user, todo]), 1);
+	                var index = 0;
+	                while (index < todos.length) {
+	                    if ([user, todo].toString() == todos[index].toString()) {
+	                        break;
+	                    }
+	                    index++;
+	                }
+	                todos.splice(index, 1);
 	            }
 
 	        };
