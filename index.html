@@ -27,20 +27,23 @@
             <input ng-show="show.register" type="submit" class="buttons" ng-click="register(user.name, user.password)" value="Register" />
         </form>
         <div ng-show="show.app" class="app col-sm-4">
-        <h1> Hello {{user.name}} </h1>	
+            <h1> Hello {{user.name}} </h1>
             <form class="col-sm-12">
                 <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event, user.name, newtodo)" autofocus>
                 <br/>
             </form>
             <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
         </div>
-        <div ng-show="show.app" class="app-todos col-sm-4" ng-repeat="todo in todos track by $index">
-            <p>{{todo}}</p> <button type="button" class="btn btn-default" ng-click="removeTodo(user.name, todo)">
-            	<span class="glyphicon glyphicon-remove"></span>
-            </button> 
+        <div ng-show="show.app" class="user-section col-sm-4" ng-repeat="todo in todos">
+            <div ng-hide="$index==0 && user.name != 'admin'" class="app-todos col-sm-12" ng-repeat="item in todo track by $index">
+                <p ng-hide="$index == 0">{{item}}</p>
+                <h3 clas="text-center user-box" ng-hide="$index!=0">ToDo List of {{item}}</h3>
+                <button ng-hide="$index == 0" type="button" class="btn btn-default" ng-click="removeTodo(todo[0], item)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
         </div>
         <div>
-        	
         </div>
     </div>
 </body>

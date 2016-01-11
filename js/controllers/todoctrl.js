@@ -5,7 +5,7 @@
             .controller('todoctrl', function($scope, validate, storage) {
                 var admin;
                 var register;
-                $scope.todos;
+                $scope.todos = [];
 
                 //controls which part of the app to show
                 $scope.show = {
@@ -13,7 +13,7 @@
                     login: false,
                     app: false,
                     register: false,
-                    message : "Enter User and Password"
+                    message: "Enter User and Password"
                 };
 
                 //stores user credentials
@@ -34,7 +34,7 @@
                     $scope.show.greeting = true;
                     $scope.show.register = false;
                     $scope.show.message = "Enter User and Password";
-                }
+                };
 
                 //validates the user through the validate service
                 //updates the Todo list from all users if Admin 
@@ -52,8 +52,7 @@
                         $scope.show.login = false;
                         update(user);
                     } else {
-                        window.alert("Username does not exist");
-                        register = window.confirm("Want to register?");
+                        register = window.confirm("Username does not exist, want to register?");
                         if (register) {
                             $scope.show.message = "Register";
                             $scope.show.register = true;
@@ -72,12 +71,15 @@
                 //updates the list 
                 $scope.enterKey = function($event, user, todo) {
                     var keyCode = $event.which || $event.keyCode;
-                    if (keyCode === 13) {
+                    if (keyCode === 13 && todo !== "") {
                         storage.addTodo(user, todo);
                         $scope.newtodo = "";
                         update(user);
                     }
                 };
+
+
+
                 //removes todo and  updates the list
                 $scope.removeTodo = function(user, todo) {
                     storage.removeTodo(user, todo);
@@ -86,14 +88,13 @@
 
                 //updates todo
                 function update(user) {
-                    $scope.todos = storage.getTodos(admin, user);
+                    var temparray = storage.getTodos(admin, user);
+                    if (admin) {
+                        $scope.todos = temparray;
+                    } else {
+                        $scope.todos = temparray;
+                    }
                 };
 
-
-
-
-
-
             });
-
     })(window);
