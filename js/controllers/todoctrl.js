@@ -1,11 +1,13 @@
-    "use strict";
+    
 
     (function(window) {
+      "use strict";
         angular.module('todoapp')
-            .controller('todoctrl', function($scope, validate, storage) {
-                var admin;
+            .controller('todoctrl', ["$scope", "validate","storage",function($scope, validate, storage) {
+                var admin = false;
                 var register;
-                $scope.todos = [];
+                var validationService = storage.validate;
+                var storageService = storage.storage;
 
                 //controls which part of the app to show
                 $scope.show = {
@@ -34,13 +36,13 @@
                     $scope.show.greeting = true;
                     $scope.show.register = false;
                     $scope.show.message = "Enter User and Password";
+                    $scope.todos = [];
                 };
 
                 //validates the user through the validate service
                 //updates the Todo list from all users if Admin 
                 //updates the Todo list for each user if not admin 
                 $scope.validate = function(user, password) {
-                    $scope.todos = [];
                     admin = false;
                     if (validate.checkAdmin(user, password)) {
                         $scope.show.app = true;
@@ -96,5 +98,5 @@
                     }
                 };
 
-            });
+            }]);
     })(window);
