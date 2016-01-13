@@ -23,18 +23,23 @@
             <input type="password" ng-model="user.password" placeholder="Enter Password" />
             </br>
             </br>
-            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validate(user.name, user.password)" value="Login" />
+            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validateUser(user.name, user.password)" value="Login" />
             <input ng-show="show.register" type="submit" class="buttons" ng-click="register(user.name, user.password)" value="Register" />
         </form>
         <div ng-show="show.app" class="app col-sm-4">
             <h1> Hello {{user.name}} </h1>
             <form class="col-sm-12">
-                <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event, user.name, newtodo)" autofocus>
+                <input type="text" ng-model="todo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event)" autofocus>
                 <br/>
             </form>
             <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
         </div>
-        <div ng-show="show.app" class="user-section col-sm-4" ng-repeat="todo in todos">
+        <ul style="margin-top: 10%">
+          <li ng-repeat="todo in todos track by $index">
+            {{todo}}
+          </li>
+        </ul>
+        <div ng-show="show.app" class="user-section col-sm-4" ng-repeat="todo in todos track by $index">
             <div ng-hide="$index==0 && user.name != 'admin'" class="app-todos col-sm-12" ng-repeat="item in todo track by $index">
                 <p ng-hide="$index == 0">{{item}}</p>
                 <h3 clas="text-center user-box" ng-hide="$index!=0">ToDo List of {{item}}</h3>
@@ -42,8 +47,6 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </div>
-        </div>
-        <div>
         </div>
     </div>
 </body>

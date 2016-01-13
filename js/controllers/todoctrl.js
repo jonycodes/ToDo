@@ -39,10 +39,10 @@
                     $scope.todos = [];
                 };
 
-                //validationServices the user through the validationService service
+                //validates the user through the validationService service
                 //updates the Todo list from all users if Admin
                 //updates the Todo list for each user if not admin
-                $scope.validationService = function(user, password) {
+                $scope.validateUser = function(user, password) {
                     var ifAdmin =  validationService.checkAdmin(user, password);
                     var ifUser = validationService.checkUser(user, password);
                     if (ifAdmin) {
@@ -71,17 +71,15 @@
                 //checks for "Enter" key press and adds a new todo
                 //to the storageService
                 //updates the list
-                $scope.enterKey = function($event, user, todo) {
+                $scope.todo = "";
+                $scope.enterKey = function($event) {
                     var keyCode = $event.which || $event.keyCode;
                     if (keyCode === 13 && todo !== "") {
-                        storageService.addTodo(user, todo);
-                        $scope.newtodo = "";
-                        update(user);
+                        storageService.addTodo($scope.user, $scope.todo);
+                        $scope.todo = "";
+                        update($scope.user);
                     }
                 };
-
-
-
                 //removes todo and  updates the list
                 $scope.removeTodo = function(user, todo) {
                     storageService.removeTodo(user, todo);
@@ -90,13 +88,8 @@
 
                 //updates todo
                 function update(user) {
-                    var temparray = storageService.getTodos(admin, user);
-                    if (admin) {
-                        $scope.todos = temparray;
-                    } else {
-                        $scope.todos = temparray;
-                    }
-                };
+                  $scope.todos = storage.getTodos(admin,user);
+                }
 
             }]);
     })(window);

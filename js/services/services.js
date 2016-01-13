@@ -1,111 +1,118 @@
-(function(window){
-	var angular = window.angular;
-	var localStorage = window.localStorage;
+(function(window) {
+  "use strict";
+  var angular = window.angular;
+  var localStorage = window.localStorage;
+  angular.module('todoapp'). //valitades the user
+  factory('validate', ['storage',function(storage) {
+			// gets the list of users
+			var usersList = JSON.parse(localStorage.getItem('usersList'));
+			// positions of admin
+			var pos = usersList.map(function(users){
+				return users.name;
+			}).indexOf('admin');
+			// admin obj
+			var admin = usersList[pos];
 
-	angular.module('todoapp') //valitades the user
-		    .factory('validate',['storage', function(storage) {
-		        localStorage.adminUser = "admin";
-		        localStorage.adminPassword = "todo";
+      return {
+        checkAdmin: function(user, password) {
+          return (user === admin.name) && (password === admin.password);
+        },
+        checkUser: function(user, password) {
+          return storage.findUser(user, password);
+        }
+      };
+    }
+  ]). //stores the todos and user's credentials
+  factory('storage', [function() {
 
-		        return  {
-		            checkAdmin: function(user, password) {
-		                if (user === localStorage.adminUser) {
-		                    if (password === localStorage.adminPassword) {
-		                        return true;
-		                    }
-		                }
-		                return false;
-		            },
-		            checkUser: function(user, password) {
-		                if (storage.findUser(user, password)) {
-		                    return true;
-		                }
-		                return false;
-		            }
-		        }
-		    }]) //stores the todos and user's credentials
-		    .factory('storage', [ function() {
-		        var users = [];
-		        var todos = [];
+      //Gets the user object from the list
+      var getUser = function(user) {
+        var userList = JSON.parse(localStorage.getItem('usersList'));
+        var pos = userList.map(function(currentUser) {
+          return currentUser.name;
+        }).indexOf(user.name);
+				if(pos < 0) return null;
+				return userList[pos];
+      };
 
-		        return {
-		            findUser: function(user, password) {
-		                for (var i = 0; i < users.length; i++) {
-		                    if (users[i][i] === user && users[i][i + 1] === password) {
-		                        return true;
-		                    }
-		                }
-		                return false;
-		            },
-		            addUser: function(user, password) {
-		                users.push([user, password]);
-		            },
-		            addTodo: function(user, todo) {
-		                var found = false;
-		                var index = 0;
-		                if (todos.length == 0) {
-		                    todos.push([user, todo]);
-		                } else {
-		                    while (index < todos.length) {
-		                        if (todos[index][0].toString() == user) {
-		                            todos[index].push(todo);
-		                            found = true;
-		                            index++;
-		                        }
-		                        index++;
-		                    }
-		                    if (!found) {
-		                        todos.push([user, todo]);
-		                    }
-		                }
-		            },
+      /**
+							Queries the list of users inside of the storage
+							returns true or false if the user is found or not
+						*/
+      var findUser = function(user, password) {
+        var usersList = JSON.parse(localStorage.getItem('usersList'));
+        var currentUser = usersList.map(function(currentUser) {
+          return (currentUser.name === user) && (currentUser.password === password);
+        });
+        return currentUser.length === 1;
+      };
+      /**
+							Adds the user into the storage of users
+						*/
+      var addUser = function(user, password) {
+        var usersList = JSON.parse(localStorage.getItem('usersList'));
+        usersList.push({id: userList.length, name: user, password: password});
+        localStorage.setItem('usersList', JSON.stringify(usersList));
+      };
+      /**
+							Adds the todo into the storage of todos
+						*/
+      var addTodo = function(user, todo) {
+        var currentUser = getUser(user);
+        if (!currentUser)
+          return;
+        var todoList = JSON.parse(localStorage.getItem('todoList'));
+        todoList.push({id: currentUser.id, todo: todo});
+        localStorage.setItem('todoList', JSON.stringify(todoList));
+      };
+      // Gets the todos associated ether to the admin or the user
+      var getTodos = function(admin, user) {
+        var todolist = JSON.parse(localStorage.getItem('todoList'));
+				if (admin) {
+          return todolist;
+        }else if (user) {
+          var currentUser = getUser(user);
+          if (!currentUser)
+            return null;
+          // Returns a new array associated with the user account
+          return todolist.map(function(todo) {
+						if(todo.id === currentUser.id ){
+								return todo;
+						}
+          });
+        }
+      };
 
-		            getTodos: function(admin, user) {
-		                var index = 0;
-		                var index2 = 0;
-		                var temparray = [];
-		                var secondarray = [];
-		                if (admin) {
-		                    return todos;
-		                } else {
-		                    while (index < todos.length) {
-		                        if (todos[index][0].toString() === user) {
-		                            secondarray = todos[index];
-		                            while (index2 < secondarray.length) {
-		                                temparray.push(secondarray[index2]);
-		                                index2++;
-		                            }
+      // findTodo = function(user, todo) {
+      //
+      // };
 
-		                        }
-		                        index++;
-		                    }
+      var removeTodo = function(user, todo) {
+        var todoList = JSON.parse(localStorage.getItem('todoList'));
+        var currentUser = getUser(user);
+        if (!currentUser)
+          return null;
 
-		                }
-		                return [temparray];
-		            },
-		            findTodo: function(user, todo) {
+        var pos = todoList.map(function(todo) {
+          return todo.todo;
+        }).indexOf(todo);
+        todoList.splice(pos, 1);
+        localStorage.setItem('todoList', JSON.stringify(todolist));
+      };
 
-		            },
+      var getCurrent = function() {
+        return todos;
+      };
 
-		            removeTodo: function(user, todo) {
-		                var index = 0;
-		                var temparray = [];
-		                while (index < todos.length) {
-		                    if (todos[index][0].toString() == user) {
-		                        break;
-		                    }
-		                    index++;
-		                }
-		                temparray = todos[index];
-		                temparray.splice(temparray.indexOf(todo), 1);
-		                todos.splice(index, 1, temparray);
-		            },
-
-		            getCurrent: function() {
-		                return todos;
-		            }
-
-		        };
-		    }]);
+      return {
+        findUser: findUser,
+        addUser: addUser,
+        addTodo: addTodo,
+        getTodos: getTodos,
+        removeTodo: removeTodo,
+        getCurrent: getCurrent
+      };
+    }
+  ]);
 
 }(window));

@@ -1,0 +1,9 @@
+{
+    "camelcase": true,
+    "freeze": true,
+    "validthis": true,
+    "newcap": true,
+
+    "browser": true,
+    "worker": true,
+}
