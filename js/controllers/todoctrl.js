@@ -1,11 +1,13 @@
-    "use strict";
+(function(window) {
+      "use strict";
 
-    (function(window) {
         angular.module('todoapp')
-            .controller('todoctrl', function($scope, validate, storage) {
-                var admin;
+            .controller('todoctrl',['$scope','validate','storage', function($scope, validate, storage) {
+                var admin = false; // to determine if the admin is logging in
                 var register;
                 $scope.todos = [];
+                var validationService = validate; // validationService var
+                var storageService = storage; // Storing of user credentials and also user todos
 
                 //controls which part of the app to show
                 $scope.show = {
@@ -34,20 +36,21 @@
                     $scope.show.greeting = true;
                     $scope.show.register = false;
                     $scope.show.message = "Enter User and Password";
+                    $scope.todos = [];
                 };
 
-                //validates the user through the validate service
-                //updates the Todo list from all users if Admin 
-                //updates the Todo list for each user if not admin 
-                $scope.validate = function(user, password) {
-                    $scope.todos = [];
-                    admin = false;
-                    if (validate.checkAdmin(user, password)) {
+                //validationServices the user through the validationService service
+                //updates the Todo list from all users if Admin
+                //updates the Todo list for each user if not admin
+                $scope.validationService = function(user, password) {
+                    var ifAdmin =  validationService.checkAdmin(user, password);
+                    var ifUser = validationService.checkUser(user, password);
+                    if (ifAdmin) {
                         $scope.show.app = true;
                         $scope.show.login = false;
                         admin = true;
                         update(user);
-                    } else if (validate.checkUser(user, password)) {
+                    } else if (ifUser) {
                         $scope.show.app = true;
                         $scope.show.login = false;
                         update(user);
@@ -61,18 +64,17 @@
                 };
                 //register a new user
                 $scope.register = function(user, password) {
-                    storage.addUser(user, password);
+                    storageService.addUser(user, password);
                     $scope.show.app = true;
                     $scope.show.login = false;
-
                 };
-                //checks for "Enter" key press and adds a new todo 
-                //to the storage 
-                //updates the list 
+                //checks for "Enter" key press and adds a new todo
+                //to the storageService
+                //updates the list
                 $scope.enterKey = function($event, user, todo) {
                     var keyCode = $event.which || $event.keyCode;
                     if (keyCode === 13 && todo !== "") {
-                        storage.addTodo(user, todo);
+                        storageService.addTodo(user, todo);
                         $scope.newtodo = "";
                         update(user);
                     }
@@ -82,13 +84,13 @@
 
                 //removes todo and  updates the list
                 $scope.removeTodo = function(user, todo) {
-                    storage.removeTodo(user, todo);
+                    storageService.removeTodo(user, todo);
                     update(user);
                 };
 
                 //updates todo
                 function update(user) {
-                    var temparray = storage.getTodos(admin, user);
+                    var temparray = storageService.getTodos(admin, user);
                     if (admin) {
                         $scope.todos = temparray;
                     } else {
@@ -96,5 +98,5 @@
                     }
                 };
 
-            });
+            }]);
     })(window);
