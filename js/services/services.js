@@ -3,22 +3,24 @@
   var angular = window.angular;
   var localStorage = window.localStorage;
   angular.module('todoapp'). //valitades the user
-  factory('validate', ['storage',function(storage) {
-			// gets the list of users
-			var usersList = JSON.parse(localStorage.getItem('usersList'));
-			// positions of admin
-			var pos = usersList.map(function(users){
-				return users.name;
-			}).indexOf('admin');
-			// admin obj
-			var admin = usersList[pos];
+  factory('validate', [
+    'storage',
+    function(storage) {
+      // gets the list of users
+      var usersList = JSON.parse(localStorage.getItem('usersList'));
+      // positions of admin
+      var pos = usersList.map(function(users) {
+        return users.name;
+      }).indexOf('admin');
+      // admin obj
+      var admin = usersList[pos];
 
       return {
-        checkAdmin: function(user, password) {
-          return (user === admin.name) && (password === admin.password);
+        checkAdmin: function(user) {
+          return (user.name === admin.name) && (user.password === admin.password);
         },
-        checkUser: function(user, password) {
-          return storage.findUser(user, password);
+        checkUser: function(user) {
+          return storage.findUser(user);
         }
       };
     }
@@ -28,30 +30,30 @@
       //Gets the user object from the list
       var getUser = function(user) {
         var userList = JSON.parse(localStorage.getItem('usersList'));
+
         var pos = userList.map(function(currentUser) {
           return currentUser.name;
         }).indexOf(user.name);
-				if(pos < 0) return null;
-				return userList[pos];
+        if (pos < 0)
+          return null;
+        return userList[pos];
       };
 
       /**
 							Queries the list of users inside of the storage
 							returns true or false if the user is found or not
 						*/
-      var findUser = function(user, password) {
-        var usersList = JSON.parse(localStorage.getItem('usersList'));
-        var currentUser = usersList.map(function(currentUser) {
-          return (currentUser.name === user) && (currentUser.password === password);
-        });
-        return currentUser.length === 1;
+      var findUser = function(user) {
+        var currentUser = getUser(user);
+				if(!currentUser) return false;
+        return currentUser.password === user.password? true : false;
       };
       /**
 							Adds the user into the storage of users
 						*/
-      var addUser = function(user, password) {
+      var addUser = function(user) {
         var usersList = JSON.parse(localStorage.getItem('usersList'));
-        usersList.push({id: userList.length, name: user, password: password});
+        usersList.push({id: userList.length, name: user.name, password: user.password});
         localStorage.setItem('usersList', JSON.stringify(usersList));
       };
       /**
@@ -68,19 +70,22 @@
       // Gets the todos associated ether to the admin or the user
       var getTodos = function(admin, user) {
         var todolist = JSON.parse(localStorage.getItem('todoList'));
-				if (admin) {
+        if (admin) {
           return todolist;
-        }else if (user) {
+        } else if (user) {
           var currentUser = getUser(user);
           if (!currentUser)
             return null;
+
           // Returns a new array associated with the user account
           return todolist.map(function(todo) {
-						if(todo.id === currentUser.id ){
-								return todo;
-						}
+            if (todo.id === currentUser.id) {
+              return todo;
+            }
           });
-        }
+        }else{
+					return null;
+				}
       };
 
       // findTodo = function(user, todo) {
@@ -100,6 +105,10 @@
         localStorage.setItem('todoList', JSON.stringify(todolist));
       };
 
+			var getUserList = function(){
+				return JSON.parse(localStorage.getItem('usersList'));
+			};
+
       var getCurrent = function() {
         return todos;
       };
@@ -110,7 +119,8 @@
         addTodo: addTodo,
         getTodos: getTodos,
         removeTodo: removeTodo,
-        getCurrent: getCurrent
+        getCurrent: getCurrent,
+				getUserList: getUserList
       };
     }
   ]);

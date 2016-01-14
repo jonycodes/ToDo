@@ -5,7 +5,6 @@
             .controller('todoctrl',['$scope','validate','storage', function($scope, validate, storage) {
                 var admin = false; // to determine if the admin is logging in
                 var register;
-                $scope.todos = [];
                 var validationService = validate; // validationService var
                 var storageService = storage; // Storing of user credentials and also user todos
 
@@ -42,14 +41,14 @@
                 //validates the user through the validationService service
                 //updates the Todo list from all users if Admin
                 //updates the Todo list for each user if not admin
-                $scope.validateUser = function(user, password) {
-                    var ifAdmin =  validationService.checkAdmin(user, password);
-                    var ifUser = validationService.checkUser(user, password);
+                $scope.validateUser = function() {
+                    var ifAdmin =  validationService.checkAdmin($scope.user);
+                    var ifUser = validationService.checkUser($scope.user);
                     if (ifAdmin) {
                         $scope.show.app = true;
                         $scope.show.login = false;
                         admin = true;
-                        update(user);
+                        update($scope.user);
                     } else if (ifUser) {
                         $scope.show.app = true;
                         $scope.show.login = false;
@@ -63,8 +62,8 @@
                     }
                 };
                 //register a new user
-                $scope.register = function(user, password) {
-                    storageService.addUser(user, password);
+                $scope.register = function() {
+                    storageService.addUser($scope.user);
                     $scope.show.app = true;
                     $scope.show.login = false;
                 };
@@ -74,7 +73,7 @@
                 $scope.todo = "";
                 $scope.enterKey = function($event) {
                     var keyCode = $event.which || $event.keyCode;
-                    if (keyCode === 13 && todo !== "") {
+                    if (keyCode === 13 && $scope.todo !== "") {
                         storageService.addTodo($scope.user, $scope.todo);
                         $scope.todo = "";
                         update($scope.user);
@@ -88,7 +87,17 @@
 
                 //updates todo
                 function update(user) {
-                  $scope.todos = storage.getTodos(admin,user);
+                  var usersList = storageService.getUserList();
+                  var todosList = storageService.getTodos(admin,user);
+
+                  $scope.usersTodos = usersList.map(function(currentUser){
+                      currentUser.todos = [];
+                      todosList.map(function(todo){
+                        currentUser.todos.push(todo);
+                      });
+                      return currentUser;
+                  });
+                  console.log($scope.usersTodos);
                 }
 
             }]);

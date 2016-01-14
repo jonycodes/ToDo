@@ -23,8 +23,8 @@
             <input type="password" ng-model="user.password" placeholder="Enter Password" />
             </br>
             </br>
-            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validateUser(user.name, user.password)" value="Login" />
-            <input ng-show="show.register" type="submit" class="buttons" ng-click="register(user.name, user.password)" value="Register" />
+            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validateUser()" value="Login" />
+            <input ng-show="show.register" type="submit" class="buttons" ng-click="register()" value="Register" />
         </form>
         <div ng-show="show.app" class="app col-sm-4">
             <h1> Hello {{user.name}} </h1>
