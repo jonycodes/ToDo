@@ -6,8 +6,8 @@
             .controller('todoctrl', ["$scope", "validate","storage",function($scope, validate, storage) {
                 var admin = false;
                 var register;
-                var validationService = storage.validate;
-                var storageService = storage.storage;
+                var validationService = validate;
+                var storageService = storage;
 
                 //controls which part of the app to show
                 $scope.show = {
@@ -36,20 +36,22 @@
                     $scope.show.greeting = true;
                     $scope.show.register = false;
                     $scope.show.message = "Enter User and Password";
-                    $scope.todos = [];
+                    $scope.userTodos = [];
+                    admin = false;
                 };
 
                 //validates the user through the validate service
                 //updates the Todo list from all users if Admin 
                 //updates the Todo list for each user if not admin 
-                $scope.validate = function(user, password) {
-                    admin = false;
-                    if (validate.checkAdmin(user, password)) {
+                $scope.validate = function(user) {
+                    var ifAdmin = validationService.checkAdmin(user);
+                    var ifUser = validationService.checkUser(user);
+                    if (ifAdmin) {
                         $scope.show.app = true;
                         $scope.show.login = false;
                         admin = true;
                         update(user);
-                    } else if (validate.checkUser(user, password)) {
+                    } else if (ifUser) {
                         $scope.show.app = true;
                         $scope.show.login = false;
                         update(user);
@@ -62,8 +64,8 @@
                     }
                 };
                 //register a new user
-                $scope.register = function(user, password) {
-                    storage.addUser(user, password);
+                $scope.register = function(user) {
+                    storageService.addUser(user);
                     $scope.show.app = true;
                     $scope.show.login = false;
 
@@ -71,12 +73,12 @@
                 //checks for "Enter" key press and adds a new todo 
                 //to the storage 
                 //updates the list 
-                $scope.enterKey = function($event, user, todo) {
+                $scope.enterKey = function($event) {
                     var keyCode = $event.which || $event.keyCode;
                     if (keyCode === 13 && todo !== "") {
-                        storage.addTodo(user, todo);
+                        storage.addTodo($scope.user, $scope.newtodo);
                         $scope.newtodo = "";
-                        update(user);
+                        update($scope.user);
                     }
                 };
 
@@ -84,17 +86,32 @@
 
                 //removes todo and  updates the list
                 $scope.removeTodo = function(user, todo) {
-                    storage.removeTodo(user, todo);
+                    storageService.removeTodo(user, todo);
                     update(user);
                 };
 
                 //updates todo
                 function update(user) {
-                    var temparray = storage.getTodos(admin, user);
+                  var usersList = storageService.getUserList();
+                  var todosList = storageService.getTodos(user);
+                  var temparray = usersList.map(function(currentUser){
+                        currentUser.todos = [];
+                        todosList.map(function(todo){
+                            if(currentUser.id === todo.id){
+                                currentUser.todos.push(todo);    
+                            }
+                            
+                        });
+                        return currentUser;
+                    });       
                     if (admin) {
-                        $scope.todos = temparray;
+                        $scope.userTodos = temparray;
                     } else {
-                        $scope.todos = temparray;
+                        $scope.userTodos = temparray.map(function(currentUser){
+                            if(user.name === currentUser.name){
+                                return currentUser;
+                            }
+                        });
                     }
                 };
 

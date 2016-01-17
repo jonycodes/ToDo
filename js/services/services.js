@@ -1,108 +1,99 @@
 		(function(window) {
-		    window.localStorage.adminUser = "admin";
-		    window.localStorage.adminPassword = "todo";
+		    'use strict';
+		    var angular = window.angular;
+		    var localStorage = window.localStorage;
+
 		    angular.module('todoapp') //valitades the user
 		        .factory('validate', ["storage", function(storage) {
 
+		            var usersList = JSON.parse(localStorage.getItem('userList'));
+		            var admin = usersList[0];
+
+
 		            return {
-		                checkAdmin: function(user, password) {
-		                    if (user === localStorage.adminUser) {
-		                        if (password === localStorage.adminPassword) {
-		                            return true;
-		                        }
-		                    }
-		                    return false;
+		                checkAdmin: function(user) {
+		                    return (user.name === admin.name && user.password === admin.password);
 		                },
-		                checkUser: function(user, password) {
-		                    if (storage.findUser(user, password)) {
-		                        return true;
-		                    }
-		                    return false;
+		                checkUser: function(user) {
+		                    return storage.findUser(user);
 		                }
 		            }
 
+
 		        }]) //stores the todos and user's credentials
 		        .factory('storage', [function() {
-		            var users = [];
-		            var todos = [];
+		            var findUser = function(user) {
+		                var userList = JSON.parse(localStorage.getItem('userList'));
+		                var pos = userList.map(function(currentUser) {
+		                    return currentUser.name
+		                }).indexOf(user.name);
+
+		                if (pos < 0) return null;
+		                return user.password === userList[pos].password ? userList[pos] : null;
+		            };
+
+		            var addUser = function(user) {
+		                var userList = JSON.parse(localStorage.getItem('userList'));
+		                userList.push({id: userList.length,  name: user.name, password: user.password});
+		                localStorage.setItem('userList', JSON.stringify(userList));
+		            }
+
+		            var addTodo = function(user, newtodo) {
+		                var currentUser = findUser(user);
+		                var todos = JSON.parse(localStorage.getItem('todos'));
+		                if (!currentUser) return;
+		                todos.push({
+		                    id: currentUser.id,
+		                    todo: newtodo
+		                });
+		                localStorage.setItem('todos', JSON.stringify(todos));
+		            }
+
+		            var getTodos = function(admin, user) {
+		                var todos = JSON.parse(localStorage.getItem('todos'));
+		                if (admin) {
+		                    return todos
+		                }
+		                else if (user) {
+		                    var currentUserId = findUser(user).id;
+		                    if (!currentUserId) return null;
+		                    return todos.map(function(todo) {
+		                        return todo.id === currentUserId ? todo : null;
+		                    });
+		                }
+		            };
+
+		            var removeTodo = function(user, todo) {
+		                var todoList = JSON.parse(localStorage.getItem('todos'));
+		                var currentUser = findUser(user);
+		                if (!currentUser)
+		                    return null;
+
+		                var pos = todoList.map(function(currentTodo) {
+		                    return currentTodo.todo;
+		                }).indexOf(todo);
+		                todoList.splice(pos, 1);
+		                localStorage.setItem('todos', JSON.stringify(todoList));
+		            };
+
+		            var getUserList = function() {
+		                return JSON.parse(localStorage.getItem('userList'));
+		            };
 
 		            return {
-		                findUser: function(user, password) {
-		                    for (var i = 0; i < users.length; i++) {
-		                        if (users[i][0].toString() == user && users[i][1].toString() == password) {
-		                            return true;
-		                        }
-		                    }
-		                    return false;
-		                },
-		                addUser: function(user, password) {
-		                    users.push([user, password]);
-		                },
-		                addTodo: function(user, todo) {
-		                    var found = false;
-		                    var index = 0;
-		                    if (todos.length == 0) {
-		                        todos.push([user, todo]);
-		                    } else {
-		                        while (index < todos.length) {
-		                            if (todos[index][0].toString() == user) {
-		                                todos[index].push(todo);
-		                                found = true;
-		                                index++;
-		                            }
-		                            index++;
-		                        }
-		                        if (!found) {
-		                            todos.push([user, todo]);
-		                        }
-		                    }
-		                },
-
-		                getTodos: function(admin, user) {
-		                    var index = 0;
-		                    var index2 = 0;
-		                    var temparray = [];
-		                    var secondarray = [];
-		                    if (admin) {
-		                        return todos;
-		                    } else {
-		                        while (index < todos.length) {
-		                            if (todos[index][0].toString() === user) {
-		                                secondarray = todos[index];
-		                                while (index2 < secondarray.length) {
-		                                    temparray.push(secondarray[index2]);
-		                                    index2++;
-		                                }
-
-		                            }
-		                            index++;
-		                        }
-
-		                    }
-		                    return [temparray];
-		                },
-		                findTodo: function(user, todo) {
-
-		                },
-
-		                removeTodo: function(user, todo) {
-		                    var index = 0;
-		                    var temparray = [];
-		                    while (index < todos.length) {
-		                        if (todos[index][0].toString() == user) {
-		                            break;
-		                        }
-		                        index++;
-		                    }
-		                    temparray = todos[index];
-		                    temparray.splice(temparray.indexOf(todo), 1);
-		                    todos.splice(index, 1, temparray);
-		                },
-
-		                getCurrent: function() {
-		                    return todos;
-		                }
-
+		                findUser: findUser,
+		                addUser: addUser,
+		                addTodo: addTodo,
+		                getTodos: getTodos,
+		                removeTodo: removeTodo,
+		                getUserList: getUserList
 		            };
+		        }]).filter('firstToUpperCase', [function(){
+		        	return function(input){
+		        		if(!input) return;
+		        		var firstletter = input.slice(0,1);
+		        		var finalletters = input.slice(1, input.length);
+		        		return firstletter.toUpperCase() + finalletters;
+		        	}
 		        }]);
 		})(window);
