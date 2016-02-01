@@ -1,19 +1,20 @@
 <div class="app col-lg-12">
-    <h1> Hello {{user.name | firstToUpperCase}} </h1>
-    <form class="col-sm-12">
-        <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event)" autofocus>
-        <br/>
-    </form>
-    <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
+  <h1> Hello {{user.name | firstToUpperCase}} </h1>
+  <form class="col-sm-12">
+    <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event)" autofocus>
+    <br/>
+  </form>
+  <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
 
 </div>
 <div class="user-section col-sm-12" ng-repeat="users in userTodos track by $index">
 
-    <h3 ng-hide="users.name == null" class="text-center user-box" style="margin-top:5%">Todo List of {{users.name | firstToUpperCase}}</h3>
-    <div class="app-todos col-sm-12" ng-repeat="todo in users.todos track by $index">
-        <p>{{todo.todo}} </p>
-        <button type="button" class="btn btn-default" ng-click="removeTodo(users, todo.todo)">
-            <span class="glyphicon glyphicon-remove"></span>
-        </button>
-    </div>
+  <h3 ng-hide="users.name == null || users.todos.length == 0" class="text-center user-box" style="margin-top:5%">Todo List of {{users.name | firstToUpperCase}}</h3>
+
+  <div class="app-todos col-sm-12" ng-repeat="todo in users.todos track by $index">
+    <p>{{todo.todo}} </p>
+    <button type="button" class="btn btn-default" ng-click="removeTodo(users, todo.todo)">
+      <span class="glyphicon glyphicon-remove"></span>
+    </button>
+  </div>
 </div>

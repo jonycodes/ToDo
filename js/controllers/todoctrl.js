@@ -1,45 +1,45 @@
 (function(window) {
   "use strict";
   angular.module('todoapp')
-    .controller('todoctrl', ["$scope", "$state", "validate", "storage", function($scope, $state, validate, storage) {
-      var validationService = validate;
+    .controller('todoctrl', ["$scope", "$state", "storage", function($scope, $state, storage) {
       var storageService = storage;
 
-      //stores user credentials
+      //Loads current user and updates its todolist
       $scope.user = storageService.getCurrentUser();
 
+      //loads todos when logged in
+      if ($scope.user !== null) {
+        update($scope.user);
+      }
 
-      //Shows Loging Menu after user clicks continue
       //Goes back to main menu
       $scope.back = function() {
         $state.go('todo.home');
       };
 
-
       //validates the user through the validate service
       //updates the Todo list from all users if Admin
       //updates the Todo list for each user if not admin
       $scope.validate = function(user) {
-        var ifAdmin = validationService.checkAdmin(user);
-        var ifUser = validationService.checkUser(user);
-        if (ifAdmin) {
+        var ifUser = storageService.findUser(user);
+        if (ifUser) {
           $state.go('todo.app');
           storageService.setCurrentUser(user);
-          update(user);
-        } else if (ifUser) {
-          $state.go('todo.app');
-          storageService.setCurrentUser(user);
-          update(user);
         } else {
           window.confirm("Wrong User Name or Password!");
         }
       };
       //register a new user
       $scope.register = function(user) {
-        storageService.addUser(user);
-        $state.go('todo.app');
-        storage.setCurrentUser(user);
+        if (storageService.findUser(user)) {
+          window.confirm("Username Name Taken");
+        } else {
+          storageService.addUser(user);
+          storage.setCurrentUser(user);
+          $state.go('todo.app');
+        }
       };
+
       //checks for "Enter" key press and adds a new todo
       //to the storage
       //updates the list
@@ -60,24 +60,13 @@
         update(user);
       };
 
-      //updates todo
+      //update todos
       function update(user) {
-        var usersList = storageService.getUserList();
         var todosList = storageService.getTodos(user);
-        var temparray = usersList.map(function(currentUser) {
-          currentUser.todos = [];
-          todosList.map(function(todo) {
-            if (currentUser.id === todo.id) {
-              currentUser.todos.push(todo);
-            }
-
-          });
-          return currentUser;
-        });
         if ($scope.user.name === "admin") {
-          $scope.userTodos = temparray;
+          $scope.userTodos = todosList;
         } else {
-          $scope.userTodos = temparray.map(function(currentUser) {
+          $scope.userTodos = todosList.map(function(currentUser) {
             if (user.name === currentUser.name) {
               return currentUser;
             }

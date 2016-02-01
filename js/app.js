@@ -2,16 +2,14 @@
   var angular = window.angular;
   var localStorage = window.localStorage;
 
-  angular.module('todoapp', ['ui.router']).run(['$state',function($state) {
-        $state.go('todo.home');
+  angular.module('todoapp', ['ui.router']).run(['$state', function($state) {
+      $state.go('todo.home');
     }])
     .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('/home');
-      $urlRouterProvider.when();
       $stateProvider.state('todo', {
           abstract: true,
-          template: '<div ui-view style="width: 600px">',
-          controller: 'todoctrl'
+          template: '<div ui-view style="width: 600px">'
         })
         .state('todo.home', {
           url: '/home',
@@ -21,7 +19,7 @@
           url: '/Login',
           templateUrl: 'templates/login.html',
           controller: 'todoctrl'
-        }).state('todo.app',{
+        }).state('todo.app', {
           url: '/ToDoList',
           templateUrl: 'templates/app.html',
           controller: 'todoctrl'
@@ -39,11 +37,10 @@
   ];
 
   var currentUser = {
-      id: null,
-      name: "",
-      password: ""
-    }
-;
+    id: null,
+    name: "",
+    password: ""
+  };
 
   localStorage.setItem('userList', JSON.stringify(userList));
   var todos = [];
