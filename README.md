@@ -10,3 +10,9 @@ For ToDo app with Angular only download v1.0 from Realeases
 Download Modules using:
 
 npm install; bower install 
+
+Admin User: able to see everyone's ToDoList and delete them.
+
+username: admin
+password: todo
+
