@@ -20,6 +20,7 @@
 }
 
 .user-section{
+	top:50px;
 	padding: 0px;
 	float: none !important;
 	position: relative;
@@ -83,7 +84,7 @@
     float:right;
 }
 .left{
-    float:left;	
+    float:left;
 }
 .align-middle{
 	display:table-cell;
@@ -134,7 +135,7 @@
 	display: table;
 	vertical-align: middle;
 }
-.register-form input{
+.inline{
  	display: inline-block;
 }
 .post-box{
@@ -145,7 +146,7 @@
 
 .comment-box{
 	padding:1%;
-	margin:10px 50px;	
+	margin:10px 50px;
 }
 
 .comment-box .post{
@@ -161,7 +162,7 @@
 }
 .post-box img{
     width: 400px;
-    height: 300px;    
+    height: 300px;
 }
 
 .nav-tabs a{

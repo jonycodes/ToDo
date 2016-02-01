@@ -1,52 +1,19 @@
 <!DOCTYPE html>
-<html>
-
+<html ng-app="todoapp" >
 <head>
+    <title>ToDo 1.1</title>
     <meta charset="UTF-8">
-    <title>ToDo List</title>
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style/style.css">
-    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
-    <script type="text/javascript" src="js/services/services.js"></script>
-    <script type="text/javascript" src="js/controllers/todoctrl.js"></script>
+    <script type="text/javascript" src="js/services/services.js" ></script>
+    <script type="text/javascript" src="js/controllers/todoctrl.js" ></script>
+
 </head>
+<body >
+<div class="align-center col-md-12" ui-view></div>
 
-<body ng-app="todoapp">
-    <div class="align-center" ng-controller="todoctrl">
-        <h1 ng-show="show.greeting">Welcome to ToDo</h1>
-        <input ng-show="show.greeting" type="submit" ng-click="next()" value="Continue!">
-        <h2 ng-show="show.login"> {{show.message}}</h2>
-        <form ng-show="show.login" class="simple-form">
-            Username
-            <input type="text" ng-model="user.name" placeholder="Enter Username" /> Password
-            <input type="password" ng-model="user.password" placeholder="Enter Password" />
-            </br>
-            </br>
-            <input ng-hide="show.register" type="submit" class="buttons" ng-click="validate(user)" value="Login" />
-            <input ng-show="show.register" type="submit" class="buttons" ng-click="register(user)" value="Register" />
-        </form>
-        <div ng-show="show.app" class="app col-sm-4">
-            <h1> Hello {{user.name | firstToUpperCase}} </h1>
-            <form class="col-sm-12">
-                <input type="text" ng-model="newtodo" id="todo" placeholder="Enter ToDo" ng-keypress="enterKey($event)" autofocus>
-                <br/>
-            </form>
-            <input type="submit" ng-click="back()" value="Main Menu" class="buttons">
-        </div>
-        <div ng-show="show.app" class="user-section col-sm-4" ng-repeat="users in userTodos track by $index">
-            <h3 ng-hide="users.name == null"class="text-center user-box" style="margin-top:5%">Todo List of {{users.name | firstToUpperCase}}</h3>
-            <div class="app-todos col-sm-12" ng-repeat="todo in users.todos track by $index">
-                <p>{{todo.todo}} </p>
-               
-                <button type="button" class="btn btn-default" ng-click="removeTodo(users, todo.todo)">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
-            </div>
-        </div>
-        <div>
-        </div>
-    </div>
 </body>
-
 </html>

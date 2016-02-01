@@ -12,12 +12,12 @@
 
 		            return {
 		                checkAdmin: function(user) {
-		                    return (user.name === admin.name && user.password === admin.password);
+		                    return user.name === admin.name && user.password === admin.password;
 		                },
 		                checkUser: function(user) {
 		                    return storage.findUser(user);
 		                }
-		            }
+		            };
 
 
 		        }]) //stores the todos and user's credentials
@@ -25,21 +25,27 @@
 		            var findUser = function(user) {
 		                var userList = JSON.parse(localStorage.getItem('userList'));
 		                var pos = userList.map(function(currentUser) {
-		                    return currentUser.name
+		                    return currentUser.name;
 		                }).indexOf(user.name);
 
 		                if (pos < 0) return null;
 		                return user.password === userList[pos].password ? userList[pos] : null;
 		            };
-
+								var getCurrentUser = function(){
+										return JSON.parse(localStorage.getItem('currentUser'));
+								};
+								var setCurrentUser = function(user){
+										var currentUser = findUser(user);
+										localStorage.setItem('currentUser', JSON.stringify(currentUser));
+								};
 		            var addUser = function(user) {
 		                var userList = JSON.parse(localStorage.getItem('userList'));
 		                userList.push({id: userList.length,  name: user.name, password: user.password});
 		                localStorage.setItem('userList', JSON.stringify(userList));
-		            }
+		            };
 
 		            var addTodo = function(user, newtodo) {
-		                var currentUser = findUser(user);
+										var currentUser = findUser(user);
 		                var todos = JSON.parse(localStorage.getItem('todos'));
 		                if (!currentUser) return;
 		                todos.push({
@@ -47,12 +53,12 @@
 		                    todo: newtodo
 		                });
 		                localStorage.setItem('todos', JSON.stringify(todos));
-		            }
+		            };
 
 		            var getTodos = function(admin, user) {
 		                var todos = JSON.parse(localStorage.getItem('todos'));
 		                if (admin) {
-		                    return todos
+		                    return todos;
 		                }
 		                else if (user) {
 		                    var currentUserId = findUser(user).id;
@@ -65,7 +71,7 @@
 
 		            var removeTodo = function(user, todo) {
 		                var todoList = JSON.parse(localStorage.getItem('todos'));
-		                var currentUser = findUser(user);
+		                var currentUser = user;
 		                if (!currentUser)
 		                    return null;
 
@@ -86,7 +92,9 @@
 		                addTodo: addTodo,
 		                getTodos: getTodos,
 		                removeTodo: removeTodo,
-		                getUserList: getUserList
+		                getUserList: getUserList,
+										getCurrentUser: getCurrentUser,
+										setCurrentUser: setCurrentUser
 		            };
 		        }]).filter('firstToUpperCase', [function(){
 		        	return function(input){
@@ -94,6 +102,6 @@
 		        		var firstletter = input.slice(0,1);
 		        		var finalletters = input.slice(1, input.length);
 		        		return firstletter.toUpperCase() + finalletters;
-		        	}
+		        	};
 		        }]);
 		})(window);

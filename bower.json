@@ -5,9 +5,11 @@
   ],
   "description": "firstApp",
   "main": "index.html",
-  "moduleType": [],
+  "moduleType": [
+    "node"
+  ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/jonycodes/ToDo",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -16,7 +18,12 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.8",
-    "bootstrap": "~3.3.6"
-  }
+    "bootstrap": "~3.3.6",
+    "angular": "~1.4.9",
+    "angular-ui-router": "~0.2.15"
+  },
+  "keywords": [
+    "node"
+  ],
+  "private": true
 }
