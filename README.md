@@ -14,5 +14,6 @@ npm install; bower install
 Admin User: able to see everyone's ToDoList and delete them.
 
 username: admin
+
 password: todo
 
