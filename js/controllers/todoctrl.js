@@ -1,17 +1,17 @@
 (function(window) {
   "use strict";
   angular.module('todoapp')
-    .controller('todoctrl', ["$scope", "$state", "storage", function($scope, $state, storage) {
+    .controller('todoctrl', ["$scope", "$state", "storage" ,'$rootScope', function($scope, $state, storage, $rootScope) {
       var storageService = storage;
 
       //Loads current user and updates its todolist
+      //loads todos when logged in
       $scope.user = storageService.getCurrentUser();
 
-      //loads todos when logged in
       if ($scope.user !== null) {
         update($scope.user);
       }
-
+    
       //Goes back to main menu
       $scope.back = function() {
         $state.go('todo.home');
