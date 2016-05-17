@@ -11,7 +11,7 @@
       if ($scope.user !== null) {
         update($scope.user);
       }
-    
+
       //Goes back to main menu
       $scope.back = function() {
         $state.go('todo.home');
@@ -35,7 +35,7 @@
           window.confirm("Username Name Taken");
         } else {
           storageService.addUser(user);
-          storage.setCurrentUser(user);
+          storageService.setCurrentUser(user);
           $state.go('todo.app');
         }
       };
